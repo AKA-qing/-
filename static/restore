@@ -1,0 +1,177 @@
+<style>
+    .chat-container {
+        max-width: 800px;
+        margin: 50px auto;
+        background-color: #fffef4;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        padding: 20px;
+        position: relative;
+    }
+
+    .chat-box {
+        height: 400px;
+        overflow-y: auto;
+        padding: 20px;
+        border-radius: 10px;
+        background-color: #fffde7;
+        margin-bottom: 15px;
+    }
+
+    .message {
+        margin-bottom: 15px;
+        display: flex;
+    }
+
+    .message.bot .message-content {
+        background-color: #fff9c4;
+        align-self: flex-start;
+    }
+
+    .message.user .message-content {
+        background-color: #ffe082;
+        align-self: flex-end;
+    }
+
+    .message-content {
+        padding: 10px 15px;
+        border-radius: 15px;
+        max-width: 70%;
+        animation: slideIn 0.3s ease;
+    }
+
+    .input-area {
+        display: flex;
+        gap: 10px;
+    }
+
+    .input-area input {
+        flex: 1;
+        padding: 10px;
+        border-radius: 20px;
+        border: 1px solid #ffe082;
+        background-color: #fffef2;
+    }
+
+    .input-area button {
+        background-color: #f4b400;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 20px;
+        font-weight: bold;
+    }
+
+    .input-area button:hover {
+        background-color: #dca200;
+    }
+
+    /* 快捷选择气泡样式 */
+    .quick-options {
+        position: absolute;
+        top: 100px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #fff8dc;
+        border: 1px solid #ffe082;
+        border-radius: 15px;
+        padding: 15px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        animation: fadeIn 0.5s ease-in-out;
+    }
+
+    .quick-options button {
+        background-color: #fff176;
+        border: none;
+        margin: 5px;
+        padding: 8px 12px;
+        border-radius: 12px;
+        font-size: 0.95rem;
+        color: #5a3e00;
+    }
+
+    .quick-options button:hover {
+        background-color: #fff59d;
+    }
+
+    @keyframes slideIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: scale(0.95); }
+        to { opacity: 1; transform: scale(1); }
+    }
+    .modal-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background: rgba(255, 244, 177, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.modal-content {
+    background: #fff8dc;
+    padding: 30px 40px;
+    border-radius: 20px;
+    border: 2px solid #ffe082;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    font-size: 1.1rem;
+    color: #5a3e00;
+    text-align: center;
+    line-height: 1.6;
+    animation: fadeIn 0.5s ease-in-out;
+}
+    /* 初始弹窗提示 */
+    #welcomeModal {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(255, 245, 200, 0.9);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    }
+
+    .welcome-content {
+        background: #fff8dc;
+        padding: 40px 50px;
+        border-radius: 20px;
+        border-left: 6px solid #ffd54f;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        max-width: 500px;
+        color: #5a3e00;
+    }
+    #welcomeModal button {
+        background: linear-gradient(135deg, #fcd34d, #fbbf24);
+        color: #5a3e00;
+        border: none;
+        padding: 12px 24px;
+        font-size: 1rem;
+        font-weight: 600;
+        border-radius: 25px;
+        box-shadow: 0 4px 10px rgba(251, 191, 36, 0.3);
+        transition: all 0.3s ease;
+        margin-top: 1rem;
+    }
+
+    #welcomeModal button:hover {
+        background: linear-gradient(135deg, #fbbf24, #fcd34d);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(251, 191, 36, 0.4);
+    }
+
+    #welcomeModal button:active {
+        transform: translateY(0);
+        box-shadow: none;
+    }
+
+
+</style>

@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block title %}登录{% endblock %}
+
+{% block content %}
+<!-- 登录卡片区域 -->
+<section class="py-4">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card p-4 shadow-sm login-card animate-card" style="background-color: #fffdf3;">
+                    <h4 class="text-center mb-4" style="color: #5a3e00;">欢迎回来</h4>
+                    <form method="POST" action="/login">
+                        <div class="mb-3">
+                            <label for="loginEmail" class="form-label" style="color:#5a3e00;">邮箱地址</label>
+                            <input type="email" class="form-control" id="loginEmail" name="email"
+                                   placeholder="请输入您的邮箱" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="loginPassword" class="form-label" style="color:#5a3e00;">密码</label>
+                            <input type="password" class="form-control" id="loginPassword" name="password"
+                                   placeholder="请输入您的密码" required>
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn" style="background-color:#fff6cc; color:#5a3e00;">
+                                登录
+                            </button>
+                        </div>
+                        <div class="text-center mt-3" style="color:#6b4b14;">
+                            <span>还没有账户？</span> <a href="/register" style="color:#a87400;">立即注册</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+<style>
+    .login-card {
+    border-radius: 15px;
+    background-color: #fffef7;
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease;
+}
+
+.login-card:hover {
+    transform: translateY(-3px);
+}
+
+</style>

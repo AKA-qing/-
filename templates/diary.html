@@ -1,0 +1,241 @@
+{% extends "base.html" %}
+{% block title %}心理日记{% endblock %}
+{% block content %}
+<style>
+    .container {
+        max-width: 850px;
+        margin: 40px auto;
+        background: #fffef4;
+        padding: 40px;
+        border-radius: 18px;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+    }
+    h2 {
+        color: #a87d00;
+        text-align: center;
+        margin-bottom: 20px;
+        font-weight: bold;
+    }
+    .form-label {
+        font-weight: 600;
+        color: #6b4b14;
+    }
+    .form-control, .form-select {
+        border-radius: 12px;
+        background-color: #fffbe6;
+        border: 1px solid #f1da8f;
+    }
+    .btn-submit {
+        background-color: #f4b400;
+        color: white;
+        border: none;
+        padding: 10px 25px;
+        border-radius: 12px;
+        font-weight: bold;
+        transition: all 0.3s ease;
+    }
+    .btn-submit:hover {
+        background-color: #dca200;
+    }
+    .emotion-tag {
+        font-size: 1.2rem;
+        margin-right: 10px;
+        cursor: pointer;
+        transition: transform 0.2s;
+    }
+    .emotion-tag:hover {
+        transform: scale(1.2);
+    }
+    .entry-card {
+        background: #fffbe6;
+        border-left: 5px solid #f4b400;
+        padding: 15px 20px;
+        border-radius: 12px;
+        margin-bottom: 15px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+
+
+</style>
+<!-- Toast 容器 -->
+<div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1080;">
+  <div id="dateToast" class="toast align-items-center text-bg-warning border-0 shadow" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="d-flex">
+      <div class="toast-body" id="toastContent">
+        你点击了某个日期
+      </div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="关闭"></button>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+    <h2 class="mb-3 text-warning-emphasis fw-bold text-center">📝 我的心理日记</h2>
+
+    <!-- 日历视图 -->
+    <div id="calendar" class="mb-4"></div>
+
+    <!-- 日记表单 -->
+    <form method="POST" action="{{ url_for('save_diary') }}">
+        <small class="text-muted">点击日历选择想记录的日期，默认为今天</small>
+    <input type="hidden" name="date" id="selectedDate" value="{{ current_date }}">
+        <div class="mb-3">
+            <label for="mood" class="form-label">今天的心情：</label>
+            <select name="mood" id="mood" class="form-select" onchange="toggleCustomMood()" required>
+            <option value="" disabled selected>请选择心情</option>
+            <option value="开心">😊 开心</option>
+            <option value="平静">😐 平静</option>
+            <option value="难过">😢 难过</option>
+            <option value="生气">😠 生气</option>
+            <option value="焦虑">😰 焦虑</option>
+            <option value="无聊">😑 无聊</option>
+            <option value="custom">🖊️ 自定义</option>
+        </select>
+
+                        <!-- 自定义心情输入框（默认隐藏） -->
+            <div id="customMoodWrapper" style="display: none;" class="mt-2">
+                <input type="text" id="customMoodValue" name="custom_mood" class="form-control" placeholder="请输入你的心情描述，如 🌸 被风吹过的温柔感">
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="content" class="form-label">写下今天的心情：</label>
+            <textarea name="content" id="content" rows="5" class="form-control" placeholder="记录一下今天的感受..." required></textarea>
+        </div>
+        <div class="d-flex justify-content-between align-items-center">
+            <button type="submit" class="btn btn-warning text-white rounded-pill px-4">保存日记</button>
+            <button type="button" class="btn btn-outline-warning rounded-pill" onclick="triggerAIChat()">AI 倾听</button>
+        </div>
+    </form>
+
+{% if entries %}
+<hr class="my-4">
+<h4 class="mb-3">📖 我的过往记录</h4>
+{% for entry in entries %}
+<div class="entry-card mb-3 position-relative" style="background-color: #fffbe6; border-left: 4px solid #ffd54f; padding: 1rem; border-radius: 12px;">
+    <strong>{{ entry.date }}</strong> - <em>{{ entry.mood }}</em>
+    <p class="mt-2">{{ entry.content }}</p>
+
+    <!-- 删除按钮 -->
+    <form method="POST" action="{{ url_for('delete_diary', entry_id=loop.index0) }}"
+          style="position: absolute; top: 10px; right: 10px;">
+        <button type="submit" class="btn btn-sm btn-outline-warning rounded-circle px-2 py-0"
+                title="删除日记">🗑</button>
+    </form>
+</div>
+{% endfor %}
+{% endif %}
+
+</div>
+
+<!-- AI 倾听弹窗 -->
+<div class="modal fade" id="aiModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content shadow rounded-4 p-3" style="background-color: #fffbea;">
+      <div class="modal-header border-0">
+        <h5 class="modal-title fw-bold text-warning">雾屿一直陪着你</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="关闭"></button>
+      </div>
+
+      <div class="modal-body">
+        <!-- 用户输入区 -->
+        <div class="mb-3">
+          <textarea id="aiInputText" class="form-control" rows="3" placeholder="写下你此刻的心情..." style="border-radius: 12px;"></textarea>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <button class="btn btn-outline-secondary btn-sm rounded-pill" onclick="startVoiceInput()">🎤 语音输入</button>
+          <button class="btn btn-warning text-white btn-sm rounded-pill px-4" onclick="sendToAI()">发送</button>
+        </div>
+
+        <!-- AI 回复 -->
+        <div id="aiResponseBox" class="p-3 rounded" style="background-color: #fff6cc; display: none;">
+          <p id="aiResponseText" class="mb-2 text-dark-emphasis fw-medium">正在生成回应...</p>
+          <audio id="aiAudio" controls class="w-100 mt-2" style="display: none;"></audio>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 日历组件 -->
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    let calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
+        initialView: 'dayGridMonth',
+        height: 500,
+        events: '/api/diary_events',
+        dateClick: function(info) {
+            const clickedDate = info.dateStr;
+
+            // 设置隐藏 input 的值
+            document.getElementById("selectedDate").value = clickedDate;
+
+            // 展示 Toast 或提示文字
+            document.getElementById("toastContent").innerText = `你选中了 ${clickedDate}，现在可以写这一天的心情啦～`;
+            new bootstrap.Toast(document.getElementById('dateToast')).show();
+        }
+    });
+    calendar.render();
+});
+function toggleCustomMood() {
+    const select = document.getElementById("mood");
+    const customWrapper = document.getElementById("customMoodWrapper");
+    customWrapper.style.display = (select.value === "custom") ? "block" : "none";
+}
+function triggerAIChat() {
+  const modal = new bootstrap.Modal(document.getElementById('aiModal'));
+  modal.show();
+
+  document.getElementById("aiInputText").value = "";
+  document.getElementById("aiResponseText").innerText = "等待你的输入...";
+  document.getElementById("aiResponseBox").style.display = "none";
+  document.getElementById("aiAudio").style.display = "none";
+}
+
+function startVoiceInput() {
+  if (!('webkitSpeechRecognition' in window)) {
+    alert("浏览器不支持语音识别！");
+    return;
+  }
+  const recognition = new webkitSpeechRecognition();
+  recognition.lang = 'zh-CN';
+  recognition.onresult = e => {
+    const transcript = e.results[0][0].transcript;
+    document.getElementById("aiInputText").value = transcript;
+  };
+  recognition.start();
+}
+
+async function sendToAI() {
+  const text = document.getElementById("aiInputText").value.trim();
+  if (!text) return alert("请输入内容或使用语音输入");
+
+  const responseBox = document.getElementById("aiResponseBox");
+  const responseText = document.getElementById("aiResponseText");
+  const audio = document.getElementById("aiAudio");
+
+  responseBox.style.display = "block";
+  responseText.innerText = "AI 正在思考中，请稍候...";
+  audio.style.display = "none";
+
+  const res = await fetch("/api/diary_ai", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ text })
+  });
+
+  const data = await res.json();
+  responseText.innerText = data.text || "AI 暂时没有回应";
+
+  if (data.audio_url) {
+    audio.src = data.audio_url;
+    audio.style.display = "block";
+    audio.play();
+  }
+}
+
+</script>
+{% endblock %}

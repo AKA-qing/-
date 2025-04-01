@@ -1,0 +1,165 @@
+{% extends 'base.html' %}
+
+{% block title %}关于我们{% endblock %}
+
+{% block content %}
+<style>
+
+    .header {
+        background: linear-gradient(135deg, #fff59d, #fff176);
+        color: #5a3e00;
+        padding: 80px 0 60px;
+        text-align: center;
+        border-bottom-left-radius: 40px;
+        border-bottom-right-radius: 40px;
+    }
+
+    .header h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+    }
+
+    .header p {
+        font-size: 1.1rem;
+        font-weight: 400;
+        color: #6d4c00;
+    }
+
+    .card {
+        background: #fffef4;
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        padding: 25px;
+        margin-bottom: 30px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    h3 {
+        color: #f4b400;
+        font-weight: 600;
+        font-size: 1.4rem;
+        margin-bottom: 15px;
+    }
+
+    ul {
+        list-style: none;
+        padding-left: 0;
+    }
+
+    ul li {
+        margin-bottom: 10px;
+        font-size: 1rem;
+        color: #5c4500;
+    }
+
+    ul li strong {
+        color: #f4b400;
+    }
+
+    a {
+        color: #f4b400;
+        font-weight: 600;
+        text-decoration: none;
+    }
+
+    a:hover {
+        text-decoration: underline;
+    }
+
+    .icon {
+        font-size: 2rem;
+        color: #fbc02d;
+        margin-bottom: 15px;
+    }
+
+    .animated-text {
+        opacity: 0;
+        transform: translateY(20px);
+        animation: fadeInUp 1s ease-out forwards;
+    }
+
+    .animated-text-1 {
+        animation-delay: 0.2s;
+    }
+
+    .animated-text-2 {
+        animation-delay: 0.6s;
+    }
+
+    .animated-text-3 {
+        animation-delay: 1s;
+    }
+
+    @keyframes fadeInUp {
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* 联系我们段落 */
+    .footer-cta {
+        text-align: center;
+        font-size: 1.05rem;
+        color: #5c4500;
+    }
+
+</style>
+
+<div class="header">
+    <div class="container text-center">
+        <h1 class="animated-text animated-text-1">关于我们</h1>
+        <p class="animated-text animated-text-2">在这里了解“心灵智境”的初心、价值观和服务理念。</p>
+    </div>
+</div>
+
+<div class="container py-5">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card animated-text animated-text-1">
+                <div class="icon"><i class="fas fa-bullseye"></i></div>
+                <h3>我们的使命</h3>
+                <p>
+                    “心灵智境”致力于通过心理测评、AI心理陪伴与人机协同服务，为用户提供温暖、可靠的心理支持。
+                </p>
+                <p>
+                    我们相信每一份情绪都值得被温柔对待，每一份困惑都值得被倾听。
+                </p>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card animated-text animated-text-2">
+                <div class="icon"><i class="fas fa-heart"></i></div>
+                <h3>我们的价值观</h3>
+                <ul>
+                    <li><strong>专业性：</strong>基于心理学与技术的融合，提供科学服务。</li>
+                    <li><strong>温暖与陪伴：</strong>以共情之心陪伴用户走出困境。</li>
+                    <li><strong>简洁体验：</strong>以用户友好的方式，贴心呈现每一个功能。</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <div class="card animated-text animated-text-3">
+                <div class="icon"><i class="fas fa-users"></i></div>
+                <h3>我们在努力</h3>
+                <p>
+                    无论您正在经历什么，这里都有一份温暖在等你。我们将持续优化平台功能与服务体验，让心理关怀真正触手可及。
+                </p>
+                <p class="footer-cta mt-3">
+                    如果您对我们的服务有任何疑问或建议，欢迎随时 <a href="/contact">联系我们</a>。
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,170 @@
+{% extends 'base.html' %}
+
+{% block title %}联系我们{% endblock %}
+
+{% block content %}
+<style>
+
+    .header {
+        background: linear-gradient(135deg, #fff59d, #ffe082);
+        padding: 80px 0 60px;
+        text-align: center;
+        border-bottom-left-radius: 40px;
+        border-bottom-right-radius: 40px;
+    }
+
+    .header h1 {
+        font-size: 2.6rem;
+        font-weight: 700;
+        color: #5a3e00;
+        margin-bottom: 10px;
+    }
+
+    .header p {
+        font-size: 1.1rem;
+        color: #6d4c00;
+    }
+
+    .card {
+        background: #fffef4;
+        border-radius: 16px;
+        box-shadow: 0 6px 20px rgba(255, 214, 102, 0.2);
+        padding: 30px;
+        margin-bottom: 30px;
+    }
+
+    h3 {
+        color: #f4b400;
+        font-weight: 600;
+        font-size: 1.3rem;
+        margin-bottom: 20px;
+    }
+
+    ul li i {
+        color: #f4b400;
+        margin-right: 10px;
+    }
+
+    a {
+        color: #f4b400;
+        text-decoration: none;
+        font-weight: 500;
+    }
+
+    a:hover {
+        text-decoration: underline;
+    }
+
+    .form-control {
+        border-radius: 12px;
+        border: 1px solid #fbe08a;
+        padding: 10px 14px;
+        font-size: 1rem;
+        background-color: #fffef8;
+    }
+
+    .form-control:focus {
+        border-color: #ffd54f;
+        box-shadow: 0 0 6px rgba(255, 213, 79, 0.4);
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #fcd34d, #fbbf24);
+        border: none;
+        border-radius: 25px;
+        padding: 10px 24px;
+        font-size: 1rem;
+        font-weight: 600;
+        color: #5a3e00;
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        background: linear-gradient(135deg, #fbbf24, #fcd34d);
+        transform: translateY(-2px);
+    }
+
+    .list-inline-item a:hover {
+        color: #dca200;
+    }
+
+    .animated-text {
+        opacity: 0;
+        transform: translateY(20px);
+        animation: fadeInUp 1s ease-out forwards;
+    }
+
+    .animated-text-1 {
+        animation-delay: 0.2s;
+    }
+
+    .animated-text-2 {
+        animation-delay: 0.5s;
+    }
+
+    @keyframes fadeInUp {
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+
+<div class="header">
+    <div class="container text-center">
+        <h1 class="animated-text animated-text-1">📮 联系我们</h1>
+        <p class="animated-text animated-text-2">如果您有任何疑问或建议，欢迎随时留言或与我们取得联系。</p>
+    </div>
+</div>
+
+<div class="container py-5">
+    <div class="row">
+        <!-- 左侧联系方式 -->
+        <div class="col-md-6">
+            <div class="card animated-text animated-text-1">
+                <h3>联系方式</h3>
+                <ul class="list-unstyled">
+                    <li><i class="fas fa-envelope"></i> 邮箱：<a href="2437985241@qq.com">support@lingxin.com</a></li>
+                    <li><i class="fas fa-phone"></i> 电话：183-2940-8661</li>
+                    <li><i class="fas fa-map-marker-alt"></i> 地址：中国湖北省武汉市洪山区文治街32号</li>
+                </ul>
+
+                <h3 class="mt-4">社交媒体</h3>
+                <ul class="list-inline">
+                    <li class="list-inline-item">
+                        <a href="#"><i class="fab fa-wechat fa-2x"></i></a>
+                    </li>
+                    <li class="list-inline-item">
+                        <a href="#"><i class="fab fa-weibo fa-2x"></i></a>
+                    </li>
+                    <li class="list-inline-item">
+                        <a href="#"><i class="fab fa-linkedin fa-2x"></i></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 右侧留言表单 -->
+        <div class="col-md-6">
+            <div class="card animated-text animated-text-2">
+                <h3>发送留言</h3>
+                <form method="POST" action="/send_message">
+                    <div class="mb-3">
+                        <label for="name" class="form-label">您的姓名</label>
+                        <input type="text" class="form-control" id="name" name="name" placeholder="请输入您的姓名" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">邮箱地址</label>
+                        <input type="email" class="form-control" id="email" name="email" placeholder="请输入您的邮箱" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="message" class="form-label">留言内容</label>
+                        <textarea class="form-control" id="message" name="message" rows="5" placeholder="请输入您的留言..." required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">发送留言</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,183 @@
+{% extends "base.html" %}
+{% block title %}人工咨询{% endblock %}
+
+{% block content %}
+<style>
+    .chat-container {
+        max-width: 800px;
+        margin: 60px auto;
+        background: #fffef4;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        overflow: hidden;
+        padding: 30px;
+    }
+
+    .chat-box {
+        max-height: 500px;
+        overflow-y: auto;
+        padding: 20px;
+        background-color: #fffcf0;
+        border-radius: 15px;
+        border: 1px solid #fff3c0;
+        margin-bottom: 20px;
+    }
+
+    .message {
+        margin-bottom: 15px;
+        display: flex;
+    }
+
+    .message-content {
+        padding: 12px 18px;
+        border-radius: 15px;
+        max-width: 70%;
+        font-size: 1rem;
+        line-height: 1.5;
+        word-wrap: break-word;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    }
+
+/* 用户消息：靠左 */
+.user .message-content {
+    background: #fff9c4;
+    color: #5c4500;
+    margin-right: auto; /* ← 靠左显示 */
+}
+
+/* 咨询师消息：靠右 */
+.bot .message-content {
+    background: #e8f5e9;
+    color: #2e7d32;
+    margin-left: auto;  /* → 靠右显示 */
+}
+
+
+    .input-area {
+        display: flex;
+        gap: 10px;
+    }
+
+    #agent-input {
+        flex: 1;
+        padding: 12px;
+        border-radius: 12px;
+        border: 1px solid #f0d57e;
+        background: #fffef4;
+    }
+
+    button {
+        background: #f4b400;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 12px;
+        font-weight: bold;
+        transition: 0.3s ease;
+    }
+
+    button:hover {
+        background: #e0a800;
+    }
+
+    /* 初始弹窗提示 */
+    #welcomeModal {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(255, 245, 200, 0.9);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    }
+
+    .welcome-content {
+        background: #fff8dc;
+        padding: 40px 50px;
+        border-radius: 20px;
+        border-left: 6px solid #ffd54f;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        max-width: 500px;
+        color: #5a3e00;
+    }
+</style>
+<div class="quick-replies mt-4 mb-3">
+    <h5 class="text-warning-emphasis mb-2">💡 快捷回复推荐</h5>
+    <div class="d-flex flex-wrap gap-2">
+        <button class="btn btn-outline-warning btn-sm rounded-pill" onclick="insertQuickReply('焦虑是一种常见反应，请允许自己慢慢调整，我们一起探索缓解的方式。')">焦虑</button>
+        <button class="btn btn-outline-warning btn-sm rounded-pill" onclick="insertQuickReply('你并不孤单，我会陪着你倾听与支持。')">孤独</button>
+        <button class="btn btn-outline-warning btn-sm rounded-pill" onclick="insertQuickReply('睡眠问题常常和压力有关，也许可以试试呼吸放松或冥想哦~')">失眠</button>
+        <button class="btn btn-outline-warning btn-sm rounded-pill" onclick="insertQuickReply('情绪有波动很正常，重要的是你愿意面对它，我们一起慢慢来。')">低落</button>
+        <button class="btn btn-outline-warning btn-sm rounded-pill" onclick="insertQuickReply('愿意听你慢慢讲，无论你处在什么情绪中，这里都很安全。')">倾听</button>
+    </div>
+</div>
+<!-- 初始欢迎弹窗 -->
+<div id="welcomeModal">
+    <div class="welcome-content">
+        <h4>🎧 连接成功</h4>
+        <p>您已接入一位用户。<br>请以温柔和耐心倾听，给予专业的心理支持 💛</p>
+        <button onclick="document.getElementById('welcomeModal').style.display='none'">我准备好了</button>
+    </div>
+</div>
+
+<!-- 主聊天盒子 -->
+<div class="chat-container">
+    <div class="chat-box" id="chat-box">
+        <div class="message bot">
+            <div class="message-content">有一名咨询者接入，请提供帮助。</div>
+        </div>
+    </div>
+
+    <div class="input-area">
+        <input type="text" id="agent-input" placeholder="请输入您的回复...">
+        <button onclick="sendMessage()">发送</button>
+    </div>
+</div>
+
+<!-- WebSocket逻辑 -->
+<script src="https://cdn.socket.io/4.0.1/socket.io.min.js"></script>
+<script>
+    const socket = io.connect('http://' + document.domain + ':' + location.port);
+    socket.emit('connect_agent');
+
+    socket.on('new_user_message', function(data) {
+        const chatBox = document.getElementById('chat-box');
+        const userMessage = document.createElement('div');
+        userMessage.className = 'message user';
+        userMessage.innerHTML = `<div class="message-content">${data.message}</div>`;
+        chatBox.appendChild(userMessage);
+        chatBox.scrollTop = chatBox.scrollHeight;
+    });
+
+    socket.on('new_agent_reply', function(data) {
+        const chatBox = document.getElementById('chat-box');
+        const botMessage = document.createElement('div');
+        botMessage.className = 'message bot';
+        botMessage.innerHTML = `<div class="message-content">${data.reply}</div>`;
+        chatBox.appendChild(botMessage);
+        chatBox.scrollTop = chatBox.scrollHeight;
+    });
+
+    function sendMessage() {
+        const agentInput = document.getElementById('agent-input').value.trim();
+        if (!agentInput) return;
+
+        const chatBox = document.getElementById('chat-box');
+        const agentMessage = document.createElement('div');
+        agentMessage.className = 'message bot';
+        agentMessage.innerHTML = `<div class="message-content">${agentInput}</div>`;
+        chatBox.appendChild(agentMessage);
+        socket.emit('agent_reply', { reply: agentInput });
+        document.getElementById('agent-input').value = '';
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+        function insertQuickReply(text) {
+        const inputBox = document.getElementById("agent-input");
+        inputBox.value = text;
+        inputBox.focus();
+    }
+</script>
+{% endblock %}

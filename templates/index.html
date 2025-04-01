@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<!-- 服务功能板块 -->
+<section class="py-5">
+    <div class="container">
+        <div class="row text-center g-4">
+            <div class="col-md-3">
+                <div class="card p-4 animate-card" style="background-color:#fffdf3;">
+                    <i class="fas fa-brain fa-3x mb-3 text-warning"></i>
+                    <h5 style="color: #5a3e00;">心理知识科普</h5>
+                    <p style="color:#6b4b14;">了解心理常识，掌握情绪调节的科学方法。</p>
+                    <a href="{{ url_for('know') }}">
+                        <button class="btn btn-warning text-white">了解心理</button>
+                    </a>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card p-4 animate-card" style="background-color:#fffdf3;">
+                    <i class="fas fa-chart-line fa-3x mb-3 text-warning"></i>
+                    <h5 style="color: #5a3e00;">心理测评</h5>
+                    <p style="color:#6b4b14;">快速了解自己的情绪状态和心理特点。</p>
+                    <a href="{{ url_for('quiz') }}">
+                        <button class="btn btn-warning text-white">开始测评</button>
+                    </a>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card p-4 animate-card" style="background-color:#fffdf3;">
+                    <i class="fas fa-user-md fa-3x mb-3 text-warning"></i>
+                    <h5 style="color: #5a3e00;">心理咨询</h5>
+                    <p style="color:#6b4b14;">预约AI或人工咨询，缓解心理压力。</p>
+                    <a href="{{ url_for('consult_platform') }}">
+                        <button class="btn btn-warning text-white">预约咨询</button>
+                    </a>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card p-4 animate-card" style="background-color:#fffdf3;">
+                    <i class="fas fa-pen-nib fa-3x mb-3 text-warning"></i>
+                    <h5 style="color: #5a3e00;">心理日记</h5>
+                    <p style="color:#6b4b14;">记录每日心情，整理情绪与思绪的归处。</p>
+                    <a href="{{ url_for('diary') }}">
+                        <button class="btn btn-warning text-white">写下今天</button>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+<style>
+    .btn-warning {
+    background-color: #fdd76a;
+    border: none;
+}
+.btn-warning:hover {
+    background-color: #ffe08a;
+    color: #5a3e00;
+}
+
+</style>

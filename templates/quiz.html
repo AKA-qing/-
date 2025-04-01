@@ -1,0 +1,211 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    h2 {
+        text-align: center;
+        font-weight: bold;
+        color: #a87d00;
+        margin-bottom: 10px;
+    }
+
+    .question {
+        display: none;
+        animation: fadeSlide 0.6s ease forwards;
+    }
+
+    .question.active {
+        display: block;
+    }
+
+    @keyframes fadeSlide {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: #6b4b14;
+    }
+
+    .form-select {
+        padding: 12px;
+        border-radius: 10px;
+        border: 1px solid #f0d57e;
+        background-color: #fff9e0;
+        transition: 0.3s;
+    }
+
+    .form-select:focus {
+        border-color: #ffcc66;
+        box-shadow: 0 0 8px rgba(255, 204, 102, 0.4);
+    }
+
+    .btn-next {
+        margin-top: 20px;
+        background-color: #ffcc66;
+        color: #5a3e00;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 10px;
+        font-weight: bold;
+        transition: 0.3s ease;
+    }
+
+    .btn-next:hover {
+        background-color: #ffe191;
+    }
+
+    .submit-button {
+        display: none;
+        margin-top: 20px;
+        background-color: #f4b400;
+        color: white;
+        padding: 12px 20px;
+        border: none;
+        border-radius: 10px;
+        font-weight: bold;
+        width: 100%;
+    }
+
+    .submit-button:hover {
+        background-color: #dca200;
+    }
+    .text-center {
+    text-align: center;
+}
+.custom-select {
+    background-color: #fffce7;
+    border: 1px solid #f5d47d;
+    border-radius: 10px;
+    padding: 10px;
+    font-size: 1rem;
+    color: #5a3e00;
+}
+.custom-select:focus {
+    border-color: #ffcc66;
+    box-shadow: 0 0 8px rgba(255, 204, 102, 0.4);
+    background-color: #fff;
+}
+.custom-select {
+    appearance: none;
+    background-color: #fffce7;
+    border: 1.5px solid #f5d47d;
+    border-radius: 12px;
+    padding: 12px 16px;
+    font-size: 1rem;
+    color: #5a3e00;
+    font-family: 'Poppins', sans-serif;
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23d4a016' viewBox='0 0 16 16'%3E%3Cpath d='M1.5 5.5L8 12l6.5-6.5'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 1rem;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.custom-select:focus {
+    border-color: #ffcc66;
+    box-shadow: 0 0 10px rgba(255, 204, 102, 0.5);
+    outline: none;
+    background-color: #fffdf4;
+}
+
+</style>
+
+<div class="container">
+    <h2>心理测评</h2>
+    <p class="text-center">请根据您的真实感受逐步回答以下问题</p>
+
+<form id="quizForm" method="POST" action="{{ url_for('quiz_result') }}">
+    {% set questions = [
+        "您最近是否频繁出现入睡困难或早醒的问题？",
+        "在面对挑战时，您是否容易感到过度紧张或烦躁？",
+        "您是否经常对未来感到担忧或缺乏控制感？",
+        "最近是否经常觉得提不起劲或做事缺乏动力？",
+        "您是否经常感到孤单、被忽视或缺乏倾诉对象？",
+        "最近是否经常对自己失望或批评自己？",
+        "您是否有时觉得生活没有意义或方向？",
+        "是否对平时感兴趣的事情失去兴趣？",
+        "在社交场合中，您是否常感到不安或想逃避？",
+        "最近是否因情绪问题影响了学习/工作效率？",
+        "是否经常反复回想某些负面经历并感到懊恼？",
+        "在压力大时，您是否有身体不适（如头痛、胸闷等）？",
+        "您是否会刻意隐藏情绪以避免他人担心？",
+        "是否觉得很难与人建立深层次的信任？",
+        "您是否希望有人倾听而不加评判地理解您？"
+    ] %}
+
+    {% for q in questions %}
+    <div class="question" id="q{{ loop.index }}">
+        <label class="form-label">{{ loop.index }}. {{ q }}</label>
+        <select name="q{{ loop.index }}"  class="form-select custom-select" name="q12" required>
+            <option value="3">从不或极少</option>
+            <option value="2">偶尔</option>
+            <option value="1">经常</option>
+            <option value="0">几乎每天</option>
+        </select>
+        <div class="text-center mt-3">
+            <button type="button" class="btn btn-warning text-white px-4 py-2 rounded-pill shadow-sm" onclick="showNext({{ loop.index }})">
+                下一题
+            </button>
+        </div>
+    </div>
+    {% endfor %}
+
+<button id="submitBtn" type="submit"
+    class="submit-button btn btn-lg btn-primary w-100 rounded-pill mt-4"
+    style="display: none;">
+    提交测评
+</button>
+
+</form>
+
+</div>
+
+<script>
+    let current = 1;
+    const total = {{ questions|length }};  // Jinja2 渲染总题目数
+
+    function showNext(index) {
+        // 当前题目隐藏
+        const currentDiv = document.getElementById(`q${index}`);
+        currentDiv.classList.remove("active");
+        currentDiv.style.display = "none";
+
+        // 判断是否还有下一题
+        const nextDiv = document.getElementById(`q${index + 1}`);
+        if (nextDiv) {
+            nextDiv.classList.add("active");
+            nextDiv.style.display = "block";
+        } else {
+            // 没有更多题了，显示提交按钮
+            document.getElementById("submitBtn").style.display = "block";
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        // 初始化：隐藏所有题目
+        for (let i = 1; i <= total; i++) {
+            const q = document.getElementById(`q${i}`);
+            if (q) {
+                q.style.display = "none";
+            }
+        }
+
+        // 显示第一题
+        const first = document.getElementById("q1");
+        if (first) {
+            first.style.display = "block";
+            first.classList.add("active");
+        }
+    });
+</script>
+
+
+{% endblock %}

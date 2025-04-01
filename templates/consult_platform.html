@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    h2, p {
+        animation: fadeIn 1s ease-in-out;
+    }
+
+    .card {
+        background-color: #fffdf2;
+        border: none;
+        border-radius: 16px;
+        box-shadow: 0 6px 15px rgba(0,0,0,0.06);
+        transition: all 0.3s ease-in-out;
+    }
+
+    .card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 12px 25px rgba(0,0,0,0.1);
+    }
+
+    .emoji {
+        font-size: 50px;
+    }
+
+    .card-title {
+        color: #a87d00;
+        font-weight: bold;
+    }
+
+    .card-text {
+        color: #7a651e;
+    }
+
+    .btn-primary, .btn-secondary, .btn-tertiary {
+        border: none;
+        border-radius: 30px;
+        padding: 10px 24px;
+        font-weight: 600;
+        transition: 0.3s;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    }
+
+    .btn-primary {
+        background: linear-gradient(to right, #f4b400, #fdd835);
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background: linear-gradient(to right, #fdd835, #f4b400);
+        transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+        background: linear-gradient(to right, #ffd54f, #ffe082);
+        color: #5a3e00;
+    }
+
+    .btn-secondary:hover {
+        background: linear-gradient(to right, #ffe082, #ffd54f);
+    }
+
+    .btn-tertiary {
+        background: linear-gradient(to right, #ffecb3, #fff176);
+        color: #5a3e00;
+    }
+
+    .btn-tertiary:hover {
+        background: linear-gradient(to right, #fff176, #ffecb3);
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+</style>
+
+<div class="container mt-5">
+    <!-- 动态标题 -->
+    <h2 class="text-center animated-text animated-text-1">心理咨询平台</h2>
+    <p class="text-center text-muted animated-text animated-text-2">请选择咨询方式，我们将竭诚为您服务。</p>
+<div class="row mt-4">
+    <!-- AI 咨询 -->
+    <div class="col-md-4">
+        <div class="card shadow-sm animate-slide-in-left">
+            <div class="card-body text-center">
+                <div class="emoji mb-3" style="font-size: 50px;">⚡</div>
+                <h5 class="card-title">AI 咨询</h5>
+                <p class="card-text text-muted">利用先进的人工智能技术，为您提供快速、高效的心理支持。</p>
+                <a href="{{ url_for('ai_consult') }}" class="btn btn-primary">进入 AI 咨询</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 人工咨询 -->
+    <div class="col-md-4">
+        <div class="card shadow-sm animate-slide-in-right">
+            <div class="card-body text-center">
+                <div class="emoji mb-3" style="font-size: 50px;">❤️</div>
+                <h5 class="card-title">人工咨询</h5>
+                <p class="card-text text-muted">由专业的心理咨询师提供一对一的个性化服务。</p>
+                <a href="{{ url_for('human_consult') }}" class="btn btn-secondary">进入人工咨询</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 咨询师平台入口 -->
+    <div class="col-md-4">
+        <div class="card shadow-sm animate-slide-in-left">
+            <div class="card-body text-center">
+                <div class="emoji mb-3" style="font-size: 50px;">👨‍⚕️</div>
+                <h5 class="card-title">咨询师平台</h5>
+                <p class="card-text text-muted">作为心理咨询师，进入平台为用户提供支持。</p>
+                <a href="{{ url_for('agent_platform') }}" class="btn btn-tertiary">进入咨询师平台</a>
+            </div>
+        </div>
+    </div>
+</div>
+    </div>
+
+<script>
+    // 确保动画在页面加载后触发
+    document.addEventListener("DOMContentLoaded", function() {
+        const elements = document.querySelectorAll('.animate-fade-in, .animate-slide-in-left, .animate-slide-in-right, .animated-text');
+        elements.forEach(el => el.style.opacity = 1);
+    });
+</script>
+{% endblock %}

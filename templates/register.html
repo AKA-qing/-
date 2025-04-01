@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block title %}注册{% endblock %}
+
+{% block content %}
+<section class="py-4">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card p-4 shadow-sm login-card animate-card" style="background-color: #fffdf3;">
+                    <h4 class="text-center mb-4" style="color: #5a3e00;">注册新账户</h4>
+                    <form method="POST" action="/register">
+                        <div class="mb-3">
+                            <label for="registerName" class="form-label" style="color:#5a3e00;">姓名</label>
+                            <input type="text" class="form-control" id="registerName" name="name" placeholder="请输入您的姓名" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="registerEmail" class="form-label" style="color:#5a3e00;">邮箱地址</label>
+                            <input type="email" class="form-control" id="registerEmail" name="email" placeholder="请输入您的邮箱" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="registerPassword" class="form-label" style="color:#5a3e00;">密码</label>
+                            <input type="password" class="form-control" id="registerPassword" name="password" placeholder="请输入您的密码" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="registerConfirmPassword" class="form-label" style="color:#5a3e00;">确认密码</label>
+                            <input type="password" class="form-control" id="registerConfirmPassword" name="confirm_password" placeholder="请再次输入您的密码" required>
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn" style="background-color:#fff6cc; color:#5a3e00;">
+                                注册
+                            </button>
+                        </div>
+                        <div class="text-center mt-3" style="color:#6b4b14;">
+                            已有账号？<a href="/login" style="color:#a87400;">立即登录</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+<style>
+    .login-card {
+    border-radius: 15px;
+    background-color: #fffef7;
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease;
+}
+
+.login-card:hover {
+    transform: translateY(-3px);
+}
+
+.animate-card {
+    animation: fadeInUp 1s ease both;
+}
+
+@keyframes fadeInUp {
+    0% { opacity: 0; transform: translateY(30px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+</style>

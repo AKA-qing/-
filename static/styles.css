@@ -1,0 +1,136 @@
+/* 聊天容器 */
+.chat-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 90vh;
+    width: 100%;
+    max-width: 800px;
+    margin: 20px auto;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+    border: 1px solid #dee2e6;
+}
+
+/* 聊天内容区域 */
+.chat-box {
+    flex-grow: 1;
+    padding: 20px;
+    overflow-y: auto;
+    background: linear-gradient(to bottom, #ffffff, #f2f4f6);
+}
+
+/* 消息样式 */
+.message {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 15px;
+    padding: 0 10px;
+}
+
+.message.user {
+    justify-content: flex-end;
+}
+
+.message.bot {
+    justify-content: flex-start;
+}
+
+.message-content {
+    max-width: 70%;
+    padding: 12px 18px;
+    font-size: 15px;
+    line-height: 1.6;
+    border-radius: 20px;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    animation: fadeIn 0.5s;
+}
+
+/* AI消息 */
+.message.bot .message-content {
+    background-color: #e3f2fd;
+    color: #333;
+    border-radius: 20px 20px 20px 0;
+}
+
+/* 用户消息 */
+.message.user .message-content {
+    background-color: #4a90e2;
+    color: #fff;
+    border-radius: 20px 20px 0 20px;
+}
+
+/* 输入区域 */
+.input-area {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-top: 1px solid #dee2e6;
+}
+
+.input-area input {
+    flex-grow: 1;
+    padding: 12px 18px;
+    border: 1px solid #ccc;
+    border-radius: 25px;
+    font-size: 16px;
+    outline: none;
+    margin-right: 10px;
+    transition: border-color 0.3s;
+}
+
+.input-area input:focus {
+    border-color: #4a90e2;
+    box-shadow: 0 0 5px rgba(74, 144, 226, 0.5);
+}
+
+.input-area button {
+    padding: 10px 25px;
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.input-area button:hover {
+    background-color: #3a7bce;
+}
+
+/* 转人工按钮 */
+.switch-human-button {
+    padding: 10px 25px;
+    background-color: #ff7043;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin: 15px auto;
+    display: block;
+    max-width: 200px;
+}
+
+.switch-human-button:hover {
+    background-color: #e64a19;
+}
+
+/* 动画 */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

@@ -1,0 +1,165 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+    h2 {
+        font-size: 2.3rem;
+        font-weight: 700;
+        color: #b48600;
+        text-align: center;
+        margin-bottom: 1.2rem;
+        animation: fadeIn 1s ease-in-out;
+    }
+    p.text-muted {
+        font-size: 1.05rem;
+        text-align: center;
+        margin-bottom: 2rem;
+        color: #806600;
+        animation: fadeIn 1.5s ease-in-out;
+    }
+    .alert {
+        border: none;
+        border-radius: 18px;
+        padding: 2rem;
+        background: linear-gradient(135deg, #fff3b0, #ffe8a0);
+        color: #5a3e00;
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+        animation: slideIn 1s ease-in-out;
+    }
+    .alert h4 {
+        font-size: 1.8rem;
+        font-weight: bold;
+        margin-bottom: 1rem;
+    }
+    .alert p {
+        font-size: 1.1rem;
+        margin-bottom: 0;
+    }
+    .btn {
+        padding: 0.75rem 1.5rem;
+        font-size: 1.1rem;
+        font-weight: 500;
+        border: none;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+    }
+    .btn-secondary {
+        background: #fff6cc;
+        color: #5a3e00;
+    }
+    .btn-secondary:hover {
+        background-color: #fff1a8;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    .btn-primary {
+        background: #f4b400;
+        color: white;
+    }
+    .btn-primary:hover {
+        background: #dca200;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    }
+    .ai-interpretation {
+        background-color: #fff8dc;
+        border-left: 5px solid #ffd54f;
+        padding: 20px;
+        margin-top: 30px;
+        border-radius: 12px;
+        animation: fadeIn 1.2s ease-in-out;
+    }
+    .ai-interpretation h5 {
+        font-weight: bold;
+        margin-bottom: 10px;
+        color: #a87400;
+    }
+    .ai-interpretation p {
+        color: #5a3e00;
+    }
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    @keyframes slideIn {
+        from { transform: translateY(20px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+    }
+    .spinner-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #a87400;
+    font-weight: 500;
+    font-size: 1rem;
+    margin-top: 10px;
+    animation: fadeIn 1s ease-in-out;
+}
+
+.spinner-container i {
+    font-size: 1.2rem;
+}
+
+</style>
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">心理测评结果</h2>
+    <p class="text-center text-muted">以下是您的心理测评得分与初步分析：</p>
+
+    <div class="alert alert-info text-center">
+        <h4>总分：{{ score }}</h4>
+        <p>{{ evaluation }}</p>
+    </div>
+
+    <!-- AI 解读模块 -->
+<div class="ai-interpretation">
+    <h5>AI 解读（来自 DeepSeek-R1 本地模型）</h5>
+    <div id="aiLoading" class="spinner-container">
+        <i class="fas fa-spinner fa-spin"></i>
+        <span class="ms-2">正在生成个性化分析...</span>
+    </div>
+    <p id="aiResult" style="display: none;"></p>
+</div>
+
+
+    <div class="d-flex justify-content-center mt-4">
+        <a href="{{ url_for('quiz') }}" class="btn btn-secondary me-3">重新测评</a>
+        <a href="{{ url_for('home') }}" class="btn btn-primary">返回首页</a>
+    </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", async function() {
+    const aiResult = document.getElementById("aiResult");
+    const aiLoading = document.getElementById("aiLoading");
+
+    try {
+        const response = await fetch("/api/ai_interpretation", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                score: {{ score }},
+                summary: "{{ evaluation }}"
+            })
+        });
+
+        const data = await response.json();
+
+        aiLoading.style.display = "none";
+        aiResult.style.display = "block";
+        aiResult.innerText = data.interpretation || "AI 暂无有效回应。";
+    } catch (err) {
+        aiLoading.style.display = "none";
+        aiResult.style.display = "block";
+        aiResult.innerText = "AI 解读加载失败，请稍后再试。";
+        console.error("AI 请求失败", err);
+    }
+});
+
+</script>
+{% endblock %}

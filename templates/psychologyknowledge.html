@@ -1,0 +1,235 @@
+{% extends 'base.html' %}
+{% block title %}心理知识科普{% endblock %}
+
+{% block content %}
+<style>
+    .header {
+        background: linear-gradient(-45deg, #fff9d5, #fff3b0, #ffeeaa, #fff6cc);
+        background-size: 400% 400%;
+        animation: gradientBG 10s ease infinite;
+        color: #5a3e00;
+        padding: 100px 0;
+        text-align: center;
+    }
+    @keyframes gradientBG {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    .card {
+        border: none;
+        border-radius: 15px;
+        background-color: #fffef7;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .card i {
+        color: #e6a700;
+    }
+
+    .btn-learn {
+        background-color: #fdd76a;
+        color: #5a3e00;
+        border: none;
+        border-radius: 20px;
+        padding: 8px 16px;
+        font-weight: bold;
+    }
+
+    .btn-learn:hover {
+        background-color: #ffe08a;
+        color: #4a3f2a;
+    }
+
+    h5 {
+        color: #5a3e00;
+        font-weight: bold;
+    }
+
+    p, li {
+        color: #6b4b14;
+    }
+    .btn-warning {
+    background-color: #fdd76a;
+    border: none;
+}
+
+.btn-warning:hover {
+    background-color: #ffe08a;
+    color: #4a3f2a;
+}
+
+.animate-card {
+    animation: fadeInUp 1s ease both;
+}
+
+@keyframes fadeInUp {
+    0% { opacity: 0; transform: translateY(30px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+.modal-body ul {
+    list-style-type: disc;
+    padding-left: 20px;
+}
+
+</style>
+
+<!-- 心理知识科普模块 -->
+<section style="background-color: #fffbe6; padding: 60px 0;">
+    <div class="container text-center">
+        <h2 class="fw-semibold mb-3" style="font-size: 1.8rem; color: #5a3e00;">心理知识科普</h2>
+        <p class="mb-5" style="color: #6b4b14;">为你科普常见心理问题与应对策略，用知识照亮心灵</p>
+
+        <div class="row g-4">
+            {% set topics = [
+                {'icon': 'fas fa-heartbeat', 'title': '焦虑', 'desc': '学习如何识别和应对焦虑，恢复心理平静。',
+                 'tips': ['深呼吸练习', '规律作息和饮食', '正念冥想']},
+                {'icon': 'fas fa-sad-tear', 'title': '抑郁', 'desc': '探索抑郁的原因，找到有效的应对策略。',
+                 'tips': ['保持规律运动', '与信任的人交流', '记录感恩日记']},
+                {'icon': 'fas fa-users', 'title': '人际关系问题', 'desc': '改善人际关系，建立更健康的社交网络。',
+                 'tips': ['倾听并表达共情', '学会拒绝和设立界限', '参与有意义的社交']},
+                {'icon': 'fas fa-briefcase', 'title': '学习与就业压力', 'desc': '缓解压力，找到应对挑战的方法。',
+                 'tips': ['制定清晰目标', '寻求他人建议', '合理时间安排']},
+                {'icon': 'fas fa-child', 'title': '儿童心理健康', 'desc': '关注儿童心理发展，营造安全环境。',
+                 'tips': ['建立安全感', '鼓励表达情绪', '学习+游戏平衡']},
+                {'icon': 'fas fa-lightbulb', 'title': '心理韧性', 'desc': '增强适应力和逆境反弹力，提升幸福感。',
+                 'tips': ['设定现实目标', '积极思维', '拓展支持网络']}
+            ] %}
+
+            {% for item in topics %}
+            <div class="col-md-4">
+                <div class="card p-4 animate-card h-100" style="border-radius: 15px; background-color: #fffef9; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
+                    <i class="{{ item.icon }} fa-2x text-warning mb-3"></i>
+                    <h5 class="text-dark fw-bold">{{ item.title }}</h5>
+                    <p class="text-muted small">{{ item.desc }}</p>
+                    <ul class="text-start small ps-3 mb-3">
+                        {% for tip in item.tips %}
+                            <li>{{ tip }}</li>
+                        {% endfor %}
+                    </ul>
+                <!-- AI解读按钮 -->
+            <div class="d-flex justify-content-between align-items-center mt-2">
+                                <a href="https://www.cnnmh.cn/">
+                                    <button class="btn btn-warning text-white rounded-pill px-4">了解更多</button>
+                                </a>
+                <button class="btn btn-outline-warning btn-sm" onclick="openAiModal('{{ item.title }}')">
+                    AI 解读
+                </button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+<!-- AI 解读 Modal -->
+<div class="modal fade" id="aiModal" tabindex="-1" aria-labelledby="aiModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="border-radius: 15px;">
+      <div class="modal-header">
+        <h5 class="modal-title" id="aiModalLabel">AI 解读</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="关闭"></button>
+      </div>
+      <div class="modal-body" id="aiModalContent">
+        正在分析中...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+const aiAnswers = {
+  "焦虑": {
+    features: [
+      "总是提前预想最坏情况",
+      "胸闷、心跳加快或出汗",
+      "难以放松、坐立不安"
+    ],
+    explain: "焦虑是大脑对不确定性的预警反应，它在适度时帮助我们规划未来，但当其持续或过强时，会影响生活质量。",
+    encouragement: "请相信，你不需要一次扛下所有事，慢慢来，也是一种前进。"
+  },
+  "抑郁": {
+    features: [
+      "长时间感到悲伤或无助",
+      "对曾经喜欢的事物失去兴趣",
+      "感到精力低下，甚至起床都很困难"
+    ],
+    explain: "抑郁不仅是情绪问题，它可能来源于压力、创伤或生物机制，需要关爱与接纳而不是忽视。",
+    encouragement: "你的感受值得被倾听，温暖会在你最需要的时候慢慢靠近。"
+  },
+  "人际关系问题": {
+    features: [
+      "在与他人交往中常常感到紧张或小心翼翼",
+      "害怕被拒绝或误解，回避表达自己",
+      "在关系中感到疲惫或失控"
+    ],
+    explain: "人际困扰源于我们对被接纳的渴望。当沟通不畅、边界模糊时，我们更容易感到受伤。",
+    encouragement: "真正值得的关系，会在尊重和理解中自然生长，你可以从相信自己开始。"
+  },
+  "学习与就业压力": {
+    features: [
+      "对成绩或工作成果过度焦虑",
+      "总是觉得时间不够、任务堆积如山",
+      "睡眠变差、注意力难集中"
+    ],
+    explain: "压力是对外界要求的反应。适度压力能促进行动，过度压力则需寻找释放通道和支持系统。",
+    encouragement: "你已经尽力了，值得为此鼓掌。缓一缓，也是在给自己充电。"
+  },
+  "儿童心理健康": {
+    features: [
+      "情绪爆发频繁、难以控制",
+      "对父母或老师依赖性过强或过弱",
+      "表现出孤僻或攻击性行为"
+    ],
+    explain: "儿童的行为是其心理状态的语言。关注背后的需求，比控制情绪更重要。",
+    encouragement: "孩子需要的，是被看见、被理解，而你正在努力做到这一点。"
+  },
+  "心理韧性": {
+    features: [
+      "在挫折面前容易一蹶不振",
+      "遇到困难时缺乏自我鼓励能力",
+      "常常因失败自责、否定自己"
+    ],
+    explain: "心理韧性是我们面对困境时恢复内在平衡的能力。它不是天生的，而是可以通过训练、支持和体验不断增强。",
+    encouragement: "每一次努力应对挑战，都是你变得更强的痕迹。慢慢来，没关系。"
+  }
+};
+
+function openAiModal(title) {
+    const item = aiAnswers[title];
+    if (!item) {
+        document.getElementById('aiModalLabel').innerText = `AI 解读「${title}」`;
+        document.getElementById('aiModalContent').innerHTML = `<p>暂时没有关于「${title}」的解读。</p>`;
+        new bootstrap.Modal(document.getElementById('aiModal')).show();
+        return;
+    }
+
+    // 构建内容 HTML
+    const html = `
+        <h6 class="text-dark">情绪特征</h6>
+        <ul class="text-muted small">
+            ${item.features.map(f => `<li>${f}</li>`).join('')}
+        </ul>
+        <h6 class="text-dark mt-3">AI 解读</h6>
+        <p class="text-muted small">${item.explain}</p>
+        <h6 class="text-success mt-3">💬 鼓励</h6>
+        <p class="fst-italic text-success small">“${item.encouragement}”</p>
+    `;
+
+    document.getElementById('aiModalLabel').innerText = `AI 解读「${title}」`;
+    document.getElementById('aiModalContent').innerHTML = html;
+    new bootstrap.Modal(document.getElementById('aiModal')).show();
+}
+
+</script>
+
+{% endblock %}
